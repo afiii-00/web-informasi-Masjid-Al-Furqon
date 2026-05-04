@@ -30,4 +30,4 @@ Ikuti langkah-langkah berikut untuk menjalankan proyek ini di komputer lokal (lo
 2. **Clone Repository:**
    Buka terminal/Command Prompt dan jalankan perintah ini di dalam folder `htdocs` (jika menggunakan XAMPP):
    ```bash
-   git clone [https://github.com/username-lu/nama-repo-lu.git](https://github.com/username-lu/nama-repo-lu.git)
+   git clone [https://github.com/afiii-00/web-informasi-Masjid-Al-Furqon.git](https://github.com/afiii-00/web-informasi-Masjid-Al-Furqon.git)
