@@ -9,15 +9,6 @@ CREATE TABLE IF NOT EXISTS admin (
     nama_lengkap VARCHAR(100) NOT NULL
 );
 
--- Tabel Kas Masjid
-CREATE TABLE IF NOT EXISTS kas_masjid (
-    id_kas INT AUTO_INCREMENT PRIMARY KEY,
-    tanggal DATE NOT NULL,
-    keterangan VARCHAR(255) NOT NULL,
-    tipe ENUM('Pemasukan', 'Pengeluaran') NOT NULL,
-    nominal INT NOT NULL
-);
-
 -- Tabel Info Jumat
 CREATE TABLE IF NOT EXISTS info_jumat (
     id_info INT AUTO_INCREMENT PRIMARY KEY,

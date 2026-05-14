@@ -59,9 +59,6 @@ $result = mysqli_query($conn, "SELECT * FROM info_jumat ORDER BY tanggal_jumat D
             <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl font-medium transition-colors">
                 <i class="ph ph-squares-four text-xl"></i> Dashboard
             </a>
-            <a href="kas.php" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl font-medium transition-colors">
-                <i class="ph ph-wallet text-xl"></i> Kas Masjid
-            </a>
             <a href="jumat.php" class="flex items-center gap-3 px-4 py-3 bg-emerald-50 text-emerald-600 rounded-xl font-medium">
                 <i class="ph-fill ph-users-three text-xl"></i> Petugas Jumat
             </a>

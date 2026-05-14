@@ -28,9 +28,6 @@ if (!isset($_SESSION['admin_logged_in'])) {
             <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 bg-emerald-50 text-emerald-600 rounded-xl font-medium">
                 <i class="ph-fill ph-squares-four text-xl"></i> Dashboard
             </a>
-            <a href="kas.php" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl font-medium transition-colors">
-                <i class="ph ph-wallet text-xl"></i> Kas Masjid
-            </a>
             <a href="jumat.php" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl font-medium transition-colors">
                 <i class="ph ph-users-three text-xl"></i> Petugas Jumat
             </a>
@@ -56,12 +53,40 @@ if (!isset($_SESSION['admin_logged_in'])) {
             </a>
         </div>
 
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600">
+                        <i class="ph-fill ph-users-three text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800">Petugas Jumat</h3>
+                        <p class="text-sm text-gray-500">Kelola jadwal khotib & imam</p>
+                    </div>
+                </div>
+                <a href="jumat.php" class="mt-4 block text-center py-2 bg-gray-50 hover:bg-emerald-50 text-emerald-600 rounded-xl text-sm font-medium transition-colors">Kelola Data</a>
+            </div>
+            
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
+                        <i class="ph-fill ph-book-open-text text-2xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-gray-800">Kajian Rutin</h3>
+                        <p class="text-sm text-gray-500">Kelola tema & pemateri kajian</p>
+                    </div>
+                </div>
+                <a href="kajian.php" class="mt-4 block text-center py-2 bg-gray-50 hover:bg-blue-50 text-blue-600 rounded-xl text-sm font-medium transition-colors">Kelola Data</a>
+            </div>
+        </div>
+
         <div class="bg-white rounded-2xl p-8 border border-gray-100 text-center">
             <div class="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-500 mx-auto mb-4">
-                <i class="ph-fill ph-wrench text-4xl"></i>
+                <i class="ph-fill ph-check-circle text-4xl"></i>
             </div>
-            <h3 class="text-xl font-bold text-gray-800 mb-2">Dashboard Dalam Proses</h3>
-            <p class="text-gray-500 max-w-md mx-auto">Halaman manajemen Kas, Jumat, dan Kajian akan segera kita kembangkan pada tahap selanjutnya. Anda sudah berhasil login sebagai Admin.</p>
+            <h3 class="text-xl font-bold text-gray-800 mb-2">Sistem Siap Digunakan</h3>
+            <p class="text-gray-500 max-w-md mx-auto">Anda dapat mengelola informasi Petugas Jumat dan Kajian Rutin melalui menu di samping atau card di atas.</p>
         </div>
     </main>
 </body>

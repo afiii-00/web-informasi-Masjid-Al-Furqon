@@ -1,25 +1,6 @@
 <?php
 require_once 'config/koneksi.php';
 
-// Ambil 5 transaksi terakhir untuk tabel keuangan
-$query_kas = mysqli_query($conn, "SELECT * FROM kas_masjid ORDER BY tanggal DESC, id_kas DESC LIMIT 5");
-$kas_terakhir = [];
-while ($row = mysqli_fetch_assoc($query_kas)) {
-    $kas_terakhir[] = $row;
-}
-
-// Ambil ringkasan saldo keuangan
-$query_saldo = mysqli_query($conn, "
-    SELECT 
-        SUM(CASE WHEN tipe = 'Pemasukan' THEN nominal ELSE 0 END) as total_masuk,
-        SUM(CASE WHEN tipe = 'Pengeluaran' THEN nominal ELSE 0 END) as total_keluar
-    FROM kas_masjid
-");
-$saldo_data = mysqli_fetch_assoc($query_saldo);
-$total_masuk = $saldo_data['total_masuk'] ?? 0;
-$total_keluar = $saldo_data['total_keluar'] ?? 0;
-$saldo_akhir = $total_masuk - $total_keluar;
-
 // Ambil info jumat terdekat (tanggal >= hari ini)
 $query_jumat = mysqli_query($conn, "SELECT * FROM info_jumat WHERE tanggal_jumat >= CURDATE() ORDER BY tanggal_jumat ASC LIMIT 1");
 $info_jumat = mysqli_fetch_assoc($query_jumat);
@@ -105,9 +86,6 @@ while ($row = mysqli_fetch_assoc($query_kajian)) {
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
                 <a href="#kegiatan" class="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-full font-semibold transition-all duration-300 shadow-lg shadow-emerald-500/30 flex items-center gap-2">
                     <i class="ph ph-calendar-check text-xl"></i> Informasi Kegiatan
-                </a>
-                <a href="#keuangan" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-6 py-3 rounded-full font-semibold transition-all duration-300 backdrop-blur-md flex items-center gap-2">
-                    <i class="ph ph-wallet text-xl"></i> Transparansi Keuangan
                 </a>
             </div>
             
@@ -221,87 +199,7 @@ while ($row = mysqli_fetch_assoc($query_kajian)) {
             </div>
         </section>
 
-        <!-- Transparansi Keuangan -->
-        <section id="keuangan" class="mb-20">
-             <div class="flex items-center gap-3 mb-8">
-                <h2 class="text-3xl font-bold text-gray-800">Transparansi Keuangan</h2>
-                <div class="h-1 flex-1 bg-gradient-to-r from-emerald-500 to-transparent rounded-full opacity-20"></div>
-            </div>
 
-            <div class="grid lg:grid-cols-3 gap-8">
-                <!-- Ringkasan Saldo -->
-                <div class="lg:col-span-1 space-y-4">
-                    <div class="bg-emerald-500 rounded-3xl p-6 text-white shadow-lg relative overflow-hidden">
-                        <i class="ph-fill ph-wallet absolute -right-6 -bottom-6 text-9xl text-white opacity-20"></i>
-                        <p class="text-emerald-100 font-medium mb-1">Total Saldo Kas</p>
-                        <h3 class="text-4xl font-bold mb-6 tracking-tight">Rp <?= number_format($saldo_akhir, 0, ',', '.') ?></h3>
-                        
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center bg-white/20 p-3 rounded-2xl backdrop-blur-sm">
-                                <span class="text-sm flex items-center gap-2"><i class="ph-fill ph-arrow-circle-down text-green-300"></i> Pemasukan</span>
-                                <span class="font-semibold">Rp <?= number_format($total_masuk, 0, ',', '.') ?></span>
-                            </div>
-                            <div class="flex justify-between items-center bg-white/20 p-3 rounded-2xl backdrop-blur-sm">
-                                <span class="text-sm flex items-center gap-2"><i class="ph-fill ph-arrow-circle-up text-red-300"></i> Pengeluaran</span>
-                                <span class="font-semibold">Rp <?= number_format($total_keluar, 0, ',', '.') ?></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Tabel Riwayat 5 Transaksi -->
-                <div class="lg:col-span-2">
-                    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
-                        <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
-                            <h3 class="font-bold text-gray-800">5 Transaksi Terakhir</h3>
-                            <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-gray-500">
-                                <i class="ph ph-receipt"></i>
-                            </div>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-left border-collapse">
-                                <thead>
-                                    <tr class="text-xs uppercase text-gray-500 bg-gray-50/80 border-b border-gray-100">
-                                        <th class="px-6 py-4 font-semibold">Tanggal</th>
-                                        <th class="px-6 py-4 font-semibold">Keterangan</th>
-                                        <th class="px-6 py-4 font-semibold">Tipe</th>
-                                        <th class="px-6 py-4 font-semibold text-right">Nominal</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-100 text-sm">
-                                    <?php if(empty($kas_terakhir)): ?>
-                                        <tr>
-                                            <td colspan="4" class="px-6 py-8 text-center text-gray-500">Belum ada riwayat transaksi.</td>
-                                        </tr>
-                                    <?php else: ?>
-                                        <?php foreach($kas_terakhir as $kas): ?>
-                                            <tr class="hover:bg-gray-50/50 transition-colors">
-                                                <td class="px-6 py-4 whitespace-nowrap text-gray-600"><?= date('d/m/Y', strtotime($kas['tanggal'])) ?></td>
-                                                <td class="px-6 py-4 text-gray-800 font-medium"><?= htmlspecialchars($kas['keterangan']) ?></td>
-                                                <td class="px-6 py-4 whitespace-nowrap">
-                                                    <?php if($kas['tipe'] == 'Pemasukan'): ?>
-                                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-green-50 text-green-700 border border-green-200">
-                                                            <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Pemasukan
-                                                        </span>
-                                                    <?php else: ?>
-                                                        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-red-50 text-red-700 border border-red-200">
-                                                            <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Pengeluaran
-                                                        </span>
-                                                    <?php endif; ?>
-                                                </td>
-                                                <td class="px-6 py-4 whitespace-nowrap text-right font-semibold <?= $kas['tipe'] == 'Pemasukan' ? 'text-green-600' : 'text-red-600' ?>">
-                                                    <?= $kas['tipe'] == 'Pemasukan' ? '+' : '-' ?> Rp <?= number_format($kas['nominal'], 0, ',', '.') ?>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
 
     </main>
 
