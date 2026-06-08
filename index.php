@@ -1,15 +1,21 @@
 <?php
 require_once 'config/koneksi.php';
 
+// Detail Kontak Masjid (Silakan isi nilai di bawah ini)
+$kontak_wa = "089512386045";
+$kontak_web = "https://media-alfurqan.com/";
+
 // Ambil info jumat terdekat (tanggal >= hari ini)
 $query_jumat = mysqli_query($conn, "SELECT * FROM info_jumat WHERE tanggal_jumat >= CURDATE() ORDER BY tanggal_jumat ASC LIMIT 1");
-$info_jumat = mysqli_fetch_assoc($query_jumat);
+$info_jumat = $query_jumat ? mysqli_fetch_assoc($query_jumat) : null;
 
 // Ambil info kajian terdekat
 $query_kajian = mysqli_query($conn, "SELECT * FROM kajian ORDER BY id_kajian DESC LIMIT 2");
 $list_kajian = [];
-while ($row = mysqli_fetch_assoc($query_kajian)) {
-    $list_kajian[] = $row;
+if ($query_kajian) {
+    while ($row = mysqli_fetch_assoc($query_kajian)) {
+        $list_kajian[] = $row;
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -199,7 +205,96 @@ while ($row = mysqli_fetch_assoc($query_kajian)) {
             </div>
         </section>
 
+        <!-- Lokasi & Kontak Section -->
+        <section id="kontak" class="mb-20">
+            <div class="flex items-center gap-3 mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">Lokasi & Kontak</h2>
+                <div class="h-1 flex-1 bg-gradient-to-r from-emerald-500 to-transparent rounded-full opacity-20"></div>
+            </div>
 
+            <div class="bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-gray-100 hover:shadow-md transition-shadow relative overflow-hidden">
+                <div class="grid lg:grid-cols-2 gap-10 items-stretch">
+                    <!-- Detail Kontak -->
+                    <div class="flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-2xl font-bold text-gray-800 mb-4 flex items-center gap-2">
+                                <i class="ph-fill ph-envelope-open text-emerald-500"></i> Hubungi Kami
+                            </h3>
+                            <p class="text-gray-500 mb-8 leading-relaxed">
+                                Silakan hubungi kami untuk informasi lebih lanjut mengenai kegiatan masjid, administrasi, dakwah, atau kunjungi langsung lokasi kami.
+                            </p>
+                            
+                            <div class="space-y-6">
+                                <!-- Alamat -->
+                                <div class="flex items-start gap-4">
+                                    <div class="p-3 bg-emerald-50 text-emerald-600 rounded-2xl flex-shrink-0">
+                                        <i class="ph-fill ph-map-pin text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-semibold text-emerald-600 uppercase tracking-wider mb-1">Alamat Masjid</p>
+                                        <p class="font-medium text-gray-800 leading-relaxed">Jl. Merdeka No. 118, RT.04/RW.01, Menteng, Kec. Bogor Barat, Kota Bogor, Jawa Barat 16111</p>
+                                    </div>
+                                </div>
+
+                                <!-- No HP / WhatsApp -->
+                                <div class="flex items-start gap-4">
+                                    <div class="p-3 bg-emerald-50 text-emerald-600 rounded-2xl flex-shrink-0">
+                                        <i class="ph-fill ph-phone text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-semibold text-emerald-600 uppercase tracking-wider mb-1">No. WhatsApp / Telepon</p>
+                                        <?php if (!empty($kontak_wa)): ?>
+                                            <?php 
+                                            $wa_link = preg_replace('/[^0-9]/', '', $kontak_wa);
+                                            if (strpos($wa_link, '0') === 0) {
+                                                $wa_link = '62' . substr($wa_link, 1);
+                                            }
+                                            ?>
+                                            <a href="https://wa.me/<?= $wa_link ?>" target="_blank" class="font-medium text-emerald-600 hover:text-emerald-700 hover:underline transition-colors flex items-center gap-1">
+                                                <?= htmlspecialchars($kontak_wa) ?> <i class="ph ph-arrow-square-out text-xs"></i>
+                                            </a>
+                                        <?php else: ?>
+                                            <p class="font-medium text-gray-400 italic">[Belum diatur]</p>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+
+                                <!-- Halaman Web -->
+                                <div class="flex items-start gap-4">
+                                    <div class="p-3 bg-emerald-50 text-emerald-600 rounded-2xl flex-shrink-0">
+                                        <i class="ph-fill ph-globe text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-semibold text-emerald-600 uppercase tracking-wider mb-1">Halaman Web</p>
+                                        <?php if (!empty($kontak_web)): ?>
+                                            <a href="<?= htmlspecialchars($kontak_web) ?>" target="_blank" class="font-medium text-emerald-600 hover:text-emerald-700 hover:underline transition-colors flex items-center gap-1">
+                                                <?= htmlspecialchars($kontak_web) ?> <i class="ph ph-arrow-square-out text-xs"></i>
+                                            </a>
+                                        <?php else: ?>
+                                            <p class="font-medium text-gray-400 italic">[Belum diatur]</p>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Google Map Embed -->
+                    <div class="rounded-3xl overflow-hidden shadow-inner border border-gray-100 min-h-[350px] lg:min-h-full relative group">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.3039775373673!2d106.7853782!3d-6.5879799!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e69c5b3594ea9d1%3A0x1426a93fe27d0064!2sMasjid%20Jami&#39;%20Al-Furqon%20(Muhammadiyah)!5e0!3m2!1sid!2sid!4v1717862400000!5m2!1sid!2sid" 
+                            width="100%" 
+                            height="100%" 
+                            style="border:0; min-height: 350px;" 
+                            allowfullscreen="" 
+                            loading="lazy" 
+                            referrerpolicy="no-referrer-when-downgrade"
+                            class="w-full h-full object-cover">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
 
     </main>
 
