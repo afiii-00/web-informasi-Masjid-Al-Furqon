@@ -69,15 +69,18 @@ if ($query_kajian) {
     <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-3 select-none cursor-default" ondblclick="window.location.href='admin/login.php';">
                     <img src="image copy.png" alt="Logo Masjid" class="w-10 h-10 object-contain rounded-full shadow-lg bg-white p-1">
                     <span class="font-bold text-xl text-white tracking-wide" id="nav-brand">Masjid Al-Furqon</span>
                 </div>
+                <!-- Tombol Admin disembunyikan agar tidak diakses oleh jamaah/client umum -->
+                <!-- 
                 <div>
                     <a href="admin/login.php" class="bg-white/20 hover:bg-emerald-500 text-white px-5 py-2.5 rounded-full font-medium transition-all duration-300 backdrop-blur-md border border-white/30 flex items-center gap-2">
                         <i class="ph ph-sign-in"></i> Admin
                     </a>
                 </div>
+                -->
             </div>
         </div>
     </nav>
