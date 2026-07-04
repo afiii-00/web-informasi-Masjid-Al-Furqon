@@ -57,11 +57,20 @@ $result = mysqli_query($conn, "SELECT * FROM kajian ORDER BY id_kajian DESC");
             <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl font-medium transition-colors">
                 <i class="ph ph-squares-four text-xl"></i> Dashboard
             </a>
+            <a href="dokumentasi.php" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl font-medium transition-colors">
+                <i class="ph ph-image text-xl"></i> Dokumentasi
+            </a>
             <a href="jumat.php" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl font-medium transition-colors">
                 <i class="ph ph-users-three text-xl"></i> Petugas Jumat
             </a>
             <a href="kajian.php" class="flex items-center gap-3 px-4 py-3 bg-emerald-50 text-emerald-600 rounded-xl font-medium">
                 <i class="ph-fill ph-book-open-text text-xl"></i> Kajian Rutin
+            </a>
+            <a href="tarjih.php" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl font-medium transition-colors">
+                <i class="ph ph-chat-circle-text text-xl"></i> Tanya Jawab AI
+            </a>
+            <a href="pengaturan.php" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl font-medium transition-colors">
+                <i class="ph ph-gear text-xl"></i> Pengaturan
             </a>
             <hr class="my-4 border-gray-100">
             <a href="logout.php" onclick="return confirm('Yakin ingin logout?')" class="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl font-medium transition-colors">

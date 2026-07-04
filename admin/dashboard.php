@@ -28,11 +28,20 @@ if (!isset($_SESSION['admin_logged_in'])) {
             <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 bg-emerald-50 text-emerald-600 rounded-xl font-medium">
                 <i class="ph-fill ph-squares-four text-xl"></i> Dashboard
             </a>
+            <a href="dokumentasi.php" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl font-medium transition-colors">
+                <i class="ph ph-image text-xl"></i> Dokumentasi
+            </a>
             <a href="jumat.php" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl font-medium transition-colors">
                 <i class="ph ph-users-three text-xl"></i> Petugas Jumat
             </a>
             <a href="kajian.php" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl font-medium transition-colors">
                 <i class="ph ph-book-open-text text-xl"></i> Kajian Rutin
+            </a>
+            <a href="tarjih.php" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl font-medium transition-colors">
+                <i class="ph ph-chat-circle-text text-xl"></i> Tanya Jawab AI
+            </a>
+            <a href="pengaturan.php" class="flex items-center gap-3 px-4 py-3 text-gray-500 hover:bg-gray-50 rounded-xl font-medium transition-colors">
+                <i class="ph ph-gear text-xl"></i> Pengaturan
             </a>
             <hr class="my-4 border-gray-100">
             <a href="logout.php" onclick="return confirm('Yakin ingin logout?')" class="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl font-medium transition-colors">
@@ -53,31 +62,65 @@ if (!isset($_SESSION['admin_logged_in'])) {
             </a>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600">
-                        <i class="ph-fill ph-users-three text-2xl"></i>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600">
+                            <i class="ph-fill ph-image text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-800">Dokumentasi</h3>
+                            <p class="text-sm text-gray-500">Kelola galeri foto</p>
+                        </div>
                     </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800">Petugas Jumat</h3>
-                        <p class="text-sm text-gray-500">Kelola jadwal khotib & imam</p>
+                </div>
+                <a href="dokumentasi.php" class="mt-4 block text-center py-2 bg-gray-50 hover:bg-emerald-50 text-emerald-600 rounded-xl text-sm font-medium transition-colors">Kelola Data</a>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600">
+                            <i class="ph-fill ph-users-three text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-800">Petugas Jumat</h3>
+                            <p class="text-sm text-gray-500">Kelola khotib & imam</p>
+                        </div>
                     </div>
                 </div>
                 <a href="jumat.php" class="mt-4 block text-center py-2 bg-gray-50 hover:bg-emerald-50 text-emerald-600 rounded-xl text-sm font-medium transition-colors">Kelola Data</a>
             </div>
             
-            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
-                <div class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
-                        <i class="ph-fill ph-book-open-text text-2xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-gray-800">Kajian Rutin</h3>
-                        <p class="text-sm text-gray-500">Kelola tema & pemateri kajian</p>
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center text-blue-600">
+                            <i class="ph-fill ph-book-open-text text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-800">Kajian Rutin</h3>
+                            <p class="text-sm text-gray-500">Kelola tema kajian</p>
+                        </div>
                     </div>
                 </div>
                 <a href="kajian.php" class="mt-4 block text-center py-2 bg-gray-50 hover:bg-blue-50 text-blue-600 rounded-xl text-sm font-medium transition-colors">Kelola Data</a>
+            </div>
+
+            <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center text-purple-600">
+                            <i class="ph-fill ph-chat-circle-text text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-gray-800">Tanya Jawab AI</h3>
+                            <p class="text-sm text-gray-500">Kelola basis RAG AI</p>
+                        </div>
+                    </div>
+                </div>
+                <a href="tarjih.php" class="mt-4 block text-center py-2 bg-gray-50 hover:bg-purple-50 text-purple-600 rounded-xl text-sm font-medium transition-colors">Kelola Data</a>
             </div>
         </div>
 

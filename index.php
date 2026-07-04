@@ -17,6 +17,22 @@ if ($query_kajian) {
         $list_kajian[] = $row;
     }
 }
+
+// Ambil data dokumentasi kegiatan terbaru
+$query_dok = mysqli_query($conn, "SELECT * FROM dokumentasi ORDER BY tanggal DESC, id_dok DESC LIMIT 6");
+$list_dok = [];
+if ($query_dok) {
+    while ($row = mysqli_fetch_assoc($query_dok)) {
+        $list_dok[] = $row;
+    }
+}
+
+// Ambil Kalender KHGT dan ID Kota
+$khgt_date = get_khgt_date_today($conn);
+$current_kota_id = get_config($conn, 'kota_id');
+$current_nama_kota = get_config($conn, 'nama_kota');
+if (empty($current_kota_id)) $current_kota_id = '1222';
+if (empty($current_nama_kota)) $current_nama_kota = 'KOTA BOGOR';
 ?>
 <!DOCTYPE html>
 <html lang="id" class="scroll-smooth">
@@ -61,6 +77,20 @@ if ($query_kajian) {
             background-size: cover;
             background-position: center;
         }
+        /* Chatbot floating widget styles */
+        #chatbot-panel {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+        .chat-message-user {
+            background-color: #10B981;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-message-bot {
+            background-color: #F3F4F6;
+            color: #1F2937;
+            border-bottom-left-radius: 4px;
+        }
     </style>
 </head>
 <body class="text-gray-800 antialiased">
@@ -99,22 +129,44 @@ if ($query_kajian) {
             </div>
             
             <!-- Jadwal Sholat Widget -->
-            <div class="glass-panel max-w-4xl mx-auto rounded-3xl p-6 shadow-2xl translate-y-16 lg:translate-y-24">
-                <div class="flex flex-col md:flex-row justify-between items-center mb-6 border-b border-gray-200 pb-4">
-                    <h3 class="text-xl font-bold text-gray-800 flex items-center gap-2">
-                        <i class="ph-fill ph-clock text-emerald-500"></i> Jadwal Sholat Hari Ini
-                    </h3>
-                    <p class="text-sm font-medium text-gray-500" id="tanggal-masehi-hijriah">Memuat tanggal...</p>
-                </div>
-                
-                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4" id="jadwal-container">
-                    <!-- Loading State -->
-                    <div class="col-span-2 sm:col-span-3 md:col-span-5 text-center py-4 text-gray-500">
-                        <i class="ph ph-spinner animate-spin text-2xl mb-2"></i>
-                        <p>Mengambil data dari Kemenag RI...</p>
+            <div class="glass-panel max-w-5xl mx-auto rounded-3xl p-6 md:p-8 shadow-2xl translate-y-16 lg:translate-y-24 text-left">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+                    <!-- Section Kiri (Tanggal KHGT & Countdown) -->
+                    <div class="lg:col-span-5 flex flex-col justify-between gap-6 border-b lg:border-b-0 lg:border-r border-gray-200/85 pb-6 lg:pb-0 lg:pr-8">
+                        <div>
+                            <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-3 py-1 rounded-full uppercase tracking-wider">Lokasi: <?= htmlspecialchars($current_nama_kota) ?></span>
+                            <h3 class="text-2xl font-extrabold text-gray-800 mt-3 flex items-center gap-2">
+                                <i class="ph-fill ph-clock text-emerald-500"></i> Jadwal Sholat
+                            </h3>
+                        </div>
+                        
+                        <!-- Kalender KHGT & Gregorian -->
+                        <div class="bg-gray-50/80 rounded-2xl p-4 border border-gray-100/50">
+                            <p class="text-[10px] font-semibold text-gray-400 uppercase tracking-wider">Kalender KHGT Muhammadiyah</p>
+                            <p class="text-lg font-bold text-emerald-700 mt-1" id="tanggal-hijriah"><?= htmlspecialchars($khgt_date) ?></p>
+                            <p class="text-sm text-gray-500 mt-1" id="tanggal-masehi">Memuat tanggal...</p>
+                        </div>
+                        
+                        <!-- Countdown Sholat Berikutnya -->
+                        <div class="bg-emerald-600 text-white rounded-2xl p-5 shadow-lg shadow-emerald-600/20 flex flex-col justify-center">
+                            <p class="text-[10px] font-semibold text-emerald-200 uppercase tracking-wider" id="countdown-title">Menuju waktu sholat berikutnya</p>
+                            <p class="text-3xl font-extrabold mt-1 tracking-tight" id="countdown-timer">--:--:--</p>
+                            <p class="text-sm text-emerald-100 mt-1" id="countdown-prayer">Memuat waktu...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Section Kanan (Jadwal 5 Waktu + Imsak/Syuruk) -->
+                    <div class="lg:col-span-7 flex flex-col justify-center">
+                        <div class="divide-y divide-gray-100" id="jadwal-container">
+                            <!-- Loading State -->
+                            <div class="text-center py-12 text-gray-500">
+                                <i class="ph ph-spinner animate-spin text-3xl mb-2 text-emerald-500"></i>
+                                <p class="text-sm">Menghubungkan ke API Kemenag RI...</p>
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-gray-400 text-right mt-4 italic">*Sumber data: Kemenag RI (ID Kota: <?= htmlspecialchars($current_kota_id) ?>)</p>
                     </div>
                 </div>
-                <p class="text-xs text-gray-400 text-right mt-4 mt-2">*Sumber data: API Kemenag RI (via MyQuran)</p>
             </div>
         </div>
     </section>
@@ -125,6 +177,53 @@ if ($query_kajian) {
     <!-- Main Content -->
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         
+        <!-- Dokumentasi Kegiatan -->
+        <section id="dokumentasi-kegiatan" class="mb-20">
+            <div class="flex items-center gap-3 mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">Dokumentasi Kegiatan</h2>
+                <div class="h-1 flex-1 bg-gradient-to-r from-emerald-500 to-transparent rounded-full opacity-20"></div>
+            </div>
+
+            <?php if (!empty($list_dok)): ?>
+                <!-- Grid on Desktop, Horizontal Scroll (Carousel-like) on Mobile -->
+                <div class="flex overflow-x-auto md:grid md:grid-cols-3 gap-6 pb-4 md:pb-0 snap-x scrollbar-thin scrollbar-thumb-gray-200">
+                    <?php foreach ($list_dok as $dok): ?>
+                        <div onclick="openDokumentasiModal('<?= htmlspecialchars($dok['judul'], ENT_QUOTES) ?>', '<?= date('d F Y', strtotime($dok['tanggal'])) ?>', '<?= htmlspecialchars($dok['deskripsi'], ENT_QUOTES) ?>', 'uploads/<?= htmlspecialchars($dok['foto']) ?>')" 
+                             class="flex-shrink-0 w-[280px] md:w-auto snap-start bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-md hover:border-emerald-100 transition-all duration-300 cursor-pointer group">
+                            <div class="relative overflow-hidden aspect-[16/10]">
+                                <img src="uploads/<?= htmlspecialchars($dok['foto']) ?>" 
+                                     alt="<?= htmlspecialchars($dok['judul']) ?>" 
+                                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                                    <span class="text-white text-xs font-semibold flex items-center gap-1">
+                                        <i class="ph ph-magnifying-glass-plus text-base"></i> Lihat Detail
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="p-5">
+                                <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
+                                    <?= date('d M Y', strtotime($dok['tanggal'])) ?>
+                                </span>
+                                <h3 class="font-bold text-gray-800 text-lg mt-3 mb-2 line-clamp-1 group-hover:text-emerald-600 transition-colors">
+                                    <?= htmlspecialchars($dok['judul']) ?>
+                                </h3>
+                                <p class="text-gray-500 text-sm line-clamp-2 leading-relaxed">
+                                    <?= htmlspecialchars($dok['deskripsi']) ?>
+                                </p>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <div class="text-center py-12 bg-white rounded-3xl border border-gray-100">
+                    <div class="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center text-gray-400 mx-auto mb-3">
+                        <i class="ph ph-image text-3xl"></i>
+                    </div>
+                    <p class="text-gray-500 text-sm">Belum ada dokumentasi kegiatan yang diunggah.</p>
+                </div>
+            <?php endif; ?>
+        </section>
+
         <!-- Info Kegiatan (Jumat & Kajian) -->
         <section id="kegiatan" class="mb-20">
             <div class="flex items-center gap-3 mb-8">
@@ -311,9 +410,240 @@ if ($query_kajian) {
             <p class="text-gray-500 text-sm">© <?= date('Y') ?> Sistem Informasi Masjid. All rights reserved.</p>
         </div>
     </footer>
+ 
+    <!-- Modal Detail Dokumentasi -->
+    <div id="dokModal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" onclick="closeDokumentasiModal()"></div>
+        <!-- Content Card -->
+        <div id="dokModalCard" class="relative bg-white rounded-3xl shadow-2xl w-full max-w-2xl overflow-hidden z-10 transition-all duration-300 scale-95 opacity-0">
+            <button onclick="closeDokumentasiModal()" class="absolute top-4 right-4 w-10 h-10 bg-black/40 hover:bg-black/60 text-white rounded-full flex items-center justify-center transition-colors z-20">
+                <i class="ph ph-x text-xl"></i>
+            </button>
+            <div class="aspect-[16/10] w-full bg-gray-100 relative">
+                <img src="" id="modalDokImg" alt="" class="w-full h-full object-cover">
+            </div>
+            <div class="p-6 md:p-8">
+                <div class="flex items-center gap-3 mb-3">
+                    <span id="modalDokTanggal" class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full"></span>
+                </div>
+                <h3 id="modalDokJudul" class="text-2xl font-bold text-gray-800 mb-4 leading-tight"></h3>
+                <div class="max-h-[150px] overflow-y-auto pr-2 text-gray-600 text-sm leading-relaxed whitespace-pre-line" id="modalDokDeskripsi"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating AI Chatbot Widget -->
+    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
+        <!-- Chat Panel -->
+        <div id="chatbot-panel" class="hidden w-[320px] sm:w-[360px] h-[480px] bg-white rounded-3xl overflow-hidden border border-gray-100 flex flex-col mb-4 shadow-2xl transition-all duration-300 scale-95 opacity-0 origin-bottom-right">
+            <!-- Header -->
+            <div class="bg-emerald-600 p-4 text-white flex justify-between items-center shadow-md flex-shrink-0">
+                <div class="flex items-center gap-2">
+                    <div class="w-10 h-10 bg-emerald-500 rounded-2xl flex items-center justify-center text-white">
+                        <i class="ph-fill ph-robot text-2xl"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-sm">Tanya Jawab AI Tarjih</h4>
+                        <span class="text-[10px] text-emerald-200">Masjid Al-Furqon</span>
+                    </div>
+                </div>
+                <button onclick="toggleChatbot()" class="w-8 h-8 rounded-lg hover:bg-emerald-700/50 flex items-center justify-center transition-colors">
+                    <i class="ph ph-x text-lg"></i>
+                </button>
+            </div>
+            
+            <!-- Message Area -->
+            <div id="chatbot-messages" class="flex-1 p-4 overflow-y-auto space-y-4 text-xs bg-gray-50/50 scrollbar-thin">
+                <!-- Welcome Msg -->
+                <div class="flex items-start gap-2 max-w-[85%]">
+                    <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="ph-fill ph-robot text-base"></i>
+                    </div>
+                    <div class="chat-message-bot p-3 rounded-2xl">
+                        <p class="leading-relaxed">Ahlan wa Sahlan! Saya Asisten AI Masjid Al-Furqon. Tanyakan apa saja seputar keputusan keagamaan atau Putusan Tarjih Muhammadiyah.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Input Form -->
+            <form id="chatbot-form" onsubmit="submitChat(event)" class="p-3 border-t border-gray-100 bg-white flex-shrink-0">
+                <div class="flex gap-2 items-center">
+                    <input type="text" id="chatbot-input" placeholder="Tulis pertanyaan Anda..."
+                        class="flex-1 px-4 py-2 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 text-xs">
+                    <button type="submit" class="w-8 h-8 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl flex items-center justify-center shadow-md shadow-emerald-500/20 transition-colors flex-shrink-0">
+                        <i class="ph-fill ph-paper-plane-tilt text-base"></i>
+                    </button>
+                </div>
+                <p class="text-[9px] text-gray-400 text-center mt-2 leading-tight">
+                    *Jawaban AI. Untuk fatwa hukum final, silakan berkonsultasi dengan ustaz/ulama setempat.
+                </p>
+            </form>
+        </div>
+
+        <!-- Float Trigger Button -->
+        <button id="chatbot-trigger" onclick="toggleChatbot()" class="w-14 h-14 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full flex items-center justify-center shadow-lg shadow-emerald-500/30 transition-all duration-300 hover:scale-105">
+            <i class="ph ph-chat-circle-dots text-3xl" id="chatbot-trigger-icon"></i>
+        </button>
+    </div>
 
     <!-- Script Interaksi -->
     <script>
+        // Modal Dokumentasi Handlers
+        function openDokumentasiModal(judul, tanggal, deskripsi, fotoPath) {
+            document.getElementById('modalDokImg').src = fotoPath;
+            document.getElementById('modalDokJudul').innerText = judul;
+            document.getElementById('modalDokTanggal').innerText = tanggal;
+            document.getElementById('modalDokDeskripsi').innerText = deskripsi;
+            
+            const modal = document.getElementById('dokModal');
+            const card = document.getElementById('dokModalCard');
+            
+            modal.classList.remove('hidden');
+            requestAnimationFrame(() => {
+                card.classList.remove('scale-95', 'opacity-0');
+                card.classList.add('scale-100', 'opacity-100');
+            });
+        }
+        
+        function closeDokumentasiModal() {
+            const modal = document.getElementById('dokModal');
+            const card = document.getElementById('dokModalCard');
+            
+            card.classList.remove('scale-100', 'opacity-100');
+            card.classList.add('scale-95', 'opacity-0');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 200);
+        }
+
+        // Chatbot Panel Toggles
+        function toggleChatbot() {
+            const panel = document.getElementById('chatbot-panel');
+            const icon = document.getElementById('chatbot-trigger-icon');
+            
+            if (panel.classList.contains('hidden')) {
+                panel.classList.remove('hidden');
+                requestAnimationFrame(() => {
+                    panel.classList.remove('scale-95', 'opacity-0');
+                    panel.classList.add('scale-100', 'opacity-100');
+                });
+                icon.className = "ph ph-x text-3xl";
+            } else {
+                panel.classList.remove('scale-100', 'opacity-100');
+                panel.classList.add('scale-95', 'opacity-0');
+                icon.className = "ph ph-chat-circle-dots text-3xl";
+                setTimeout(() => {
+                    panel.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        async function submitChat(e) {
+            e.preventDefault();
+            const input = document.getElementById('chatbot-input');
+            const message = input.value.trim();
+            if (!message) return;
+            
+            input.value = '';
+            appendMessage(message, 'user');
+            
+            const loadingId = 'loading-' + Date.now();
+            appendLoading(loadingId);
+            
+            try {
+                const formData = new FormData();
+                formData.append('message', message);
+                
+                const response = await fetch('chat_handler.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                const result = await response.json();
+                
+                removeLoading(loadingId);
+                
+                if (result.status === 'success') {
+                    appendMessage(result.data, 'bot');
+                } else {
+                    appendMessage(result.message, 'bot', true);
+                }
+            } catch (error) {
+                removeLoading(loadingId);
+                appendMessage('Server AI sedang mengalami gangguan koneksi. Silakan coba beberapa saat lagi.', 'bot', true);
+            }
+        }
+
+        function appendMessage(text, sender, isError = false) {
+            const container = document.getElementById('chatbot-messages');
+            const msgDiv = document.createElement('div');
+            
+            if (sender === 'user') {
+                msgDiv.className = 'flex justify-end';
+                msgDiv.innerHTML = `
+                    <div class="chat-message-user p-3 rounded-2xl max-w-[85%]">
+                        <p class="leading-relaxed">${escapeHtml(text)}</p>
+                    </div>
+                `;
+            } else {
+                msgDiv.className = 'flex items-start gap-2 max-w-[85%]';
+                const textFormatted = text.replace(/\n/g, '<br>');
+                const bgClass = isError ? 'bg-red-50 text-red-700 border border-red-100' : 'chat-message-bot';
+                const iconClass = isError ? 'ph-fill ph-warning-circle text-red-500' : 'ph-fill ph-robot text-emerald-600';
+                const iconBg = isError ? 'bg-red-50' : 'bg-emerald-100';
+                
+                msgDiv.innerHTML = `
+                    <div class="w-8 h-8 ${iconBg} rounded-xl flex items-center justify-center flex-shrink-0">
+                        <i class="${iconClass} text-base"></i>
+                    </div>
+                    <div class="${bgClass} p-3 rounded-2xl">
+                        <p class="leading-relaxed">${textFormatted}</p>
+                    </div>
+                `;
+            }
+            
+            container.appendChild(msgDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function appendLoading(id) {
+            const container = document.getElementById('chatbot-messages');
+            const loadDiv = document.createElement('div');
+            loadDiv.id = id;
+            loadDiv.className = 'flex items-start gap-2 max-w-[85%]';
+            loadDiv.innerHTML = `
+                <div class="w-8 h-8 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <i class="ph-fill ph-robot text-base"></i>
+                </div>
+                <div class="chat-message-bot p-3 rounded-2xl flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce" style="animation-delay: 0ms"></span>
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce" style="animation-delay: 150ms"></span>
+                    <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-bounce" style="animation-delay: 300ms"></span>
+                </div>
+            `;
+            container.appendChild(loadDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function removeLoading(id) {
+            const elem = document.getElementById(id);
+            if (elem) elem.remove();
+        }
+
+        function escapeHtml(string) {
+            return String(string).replace(/[&<>"']/g, function (s) {
+                return {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                }[s];
+            });
+        }
+
+
         // Navbar Scroll Effect
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
@@ -332,50 +662,125 @@ if ($query_kajian) {
         });
 
         // Ambil Data Jadwal Sholat Kemenag via MyQuran API
+        let prayerSchedule = {};
+        
         async function fetchJadwalSholat() {
             try {
-                // Kota ID 1301 = Jakarta. Bisa diganti sesuai lokasi yang diinginkan.
                 const today = new Date();
                 const year = today.getFullYear();
                 const month = String(today.getMonth() + 1).padStart(2, '0');
                 const date = String(today.getDate()).padStart(2, '0');
                 
-                const response = await fetch(`https://api.myquran.com/v2/sholat/jadwal/1301/${year}/${month}/${date}`);
+                const response = await fetch(`https://api.myquran.com/v2/sholat/jadwal/<?= $current_kota_id ?>/${year}/${month}/${date}`);
                 const result = await response.json();
 
                 if (result.status) {
                     const data = result.data;
-                    document.getElementById('tanggal-masehi-hijriah').innerText = data.jadwal.tanggal;
+                    document.getElementById('tanggal-masehi').innerText = data.jadwal.tanggal;
 
-                    const times = [
-                        { name: 'Subuh', time: data.jadwal.subuh },
-                        { name: 'Dzuhur', time: data.jadwal.dzuhur },
-                        { name: 'Ashar', time: data.jadwal.ashar },
-                        { name: 'Maghrib', time: data.jadwal.maghrib },
-                        { name: 'Isya', time: data.jadwal.isya }
-                    ];
+                    prayerSchedule = {
+                        'Imsak': data.jadwal.imsak,
+                        'Subuh': data.jadwal.subuh,
+                        'Terbit': data.jadwal.terbit,
+                        'Dzuhur': data.jadwal.dzuhur,
+                        'Ashar': data.jadwal.ashar,
+                        'Maghrib': data.jadwal.maghrib,
+                        'Isya': data.jadwal.isya
+                    };
 
-                    let html = '';
-                    times.forEach((t) => {
-                        html += `
-                            <div class="bg-gray-50 hover:bg-emerald-50 rounded-2xl p-4 text-center border border-gray-100 hover:border-emerald-200 transition-all duration-300 group flex flex-col justify-center min-h-[100px]">
-                                <p class="text-sm font-semibold text-emerald-600 uppercase tracking-wider mb-2">${t.name}</p>
-                                <p class="text-3xl font-bold text-gray-800">${t.time}</p>
-                            </div>
-                        `;
-                    });
-                    document.getElementById('jadwal-container').innerHTML = html;
+                    renderPrayerSchedule();
+                    startCountdown();
                 }
             } catch (error) {
                 document.getElementById('jadwal-container').innerHTML = `
-                    <div class="col-span-2 sm:col-span-3 md:col-span-5 text-center py-4 text-red-500 text-sm">
-                        Gagal memuat jadwal sholat. Pastikan Anda terhubung ke internet.
+                    <div class="text-center py-8 text-red-500 text-sm">
+                        Gagal memuat jadwal sholat. Pastikan koneksi internet aktif.
                     </div>
                 `;
             }
         }
 
-        // Load data saat pertama kali buka
+        function renderPrayerSchedule() {
+            let html = '';
+            for (const [name, time] of Object.entries(prayerSchedule)) {
+                html += `
+                    <div id="row-${name}" class="flex justify-between items-center py-2.5 px-4 rounded-xl transition-colors">
+                        <span class="font-semibold text-gray-700 flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-gray-300 status-dot"></span>
+                            ${name}
+                        </span>
+                        <span class="font-bold text-lg text-gray-800">${time}</span>
+                    </div>
+                `;
+            }
+            document.getElementById('jadwal-container').innerHTML = html;
+        }
+
+        function startCountdown() {
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+        }
+
+        function updateCountdown() {
+            const now = new Date();
+            const currentTime = now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+            
+            let nextPrayerName = '';
+            let nextPrayerTimeStr = '';
+            let nextPrayerSeconds = 0;
+            
+            const list = [];
+            for (const [name, timeStr] of Object.entries(prayerSchedule)) {
+                if (name === 'Terbit') continue;
+                const [h, m] = timeStr.split(':').map(Number);
+                const seconds = h * 3600 + m * 60;
+                list.push({ name, seconds, timeStr });
+            }
+            
+            let found = false;
+            for (let i = 0; i < list.length; i++) {
+                if (list[i].seconds > currentTime) {
+                    nextPrayerName = list[i].name;
+                    nextPrayerTimeStr = list[i].timeStr;
+                    nextPrayerSeconds = list[i].seconds;
+                    found = true;
+                    break;
+                }
+            }
+            
+            if (!found) {
+                nextPrayerName = 'Subuh';
+                nextPrayerTimeStr = prayerSchedule['Subuh'];
+                const [h, m] = nextPrayerTimeStr.split(':').map(Number);
+                nextPrayerSeconds = h * 3600 + m * 60 + 24 * 3600;
+            }
+            
+            let diff = nextPrayerSeconds - currentTime;
+            
+            const hours = String(Math.floor(diff / 3600)).padStart(2, '0');
+            const minutes = String(Math.floor((diff % 3600) / 60)).padStart(2, '0');
+            const seconds = String(diff % 60).padStart(2, '0');
+            
+            document.getElementById('countdown-timer').innerText = `${hours}:${minutes}:${seconds}`;
+            document.getElementById('countdown-prayer').innerText = `Menuju waktu ${nextPrayerName} (${nextPrayerTimeStr})`;
+            
+            for (const name of Object.keys(prayerSchedule)) {
+                const row = document.getElementById(`row-${name}`);
+                if (row) {
+                    row.className = "flex justify-between items-center py-2.5 px-4 rounded-xl transition-colors";
+                    const dot = row.querySelector('.status-dot');
+                    if (dot) dot.className = "w-2 h-2 rounded-full bg-gray-300 status-dot";
+                }
+            }
+            
+            const activeRow = document.getElementById(`row-${nextPrayerName}`);
+            if (activeRow) {
+                activeRow.className = "flex justify-between items-center py-2.5 px-4 rounded-xl bg-emerald-50 border border-emerald-100/50 text-emerald-950 font-bold transition-colors";
+                const dot = activeRow.querySelector('.status-dot');
+                if (dot) dot.className = "w-2 h-2 rounded-full bg-emerald-500 animate-pulse status-dot";
+            }
+        }
+
         fetchJadwalSholat();
     </script>
 </body>

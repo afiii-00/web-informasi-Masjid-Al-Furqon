@@ -1,0 +1,186 @@
+[2026-07-03 12:08:09] HTTP Code: 400 | Curl Error:  | Response: {
+  "error": {
+    "code": 400,
+    "message": "Invalid JSON payload received. Unknown name \"systemInstruction\": Cannot find field.",
+    "status": "INVALID_ARGUMENT",
+    "details": [
+      {
+        "@type": "type.googleapis.com/google.rpc.BadRequest",
+        "fieldViolations": [
+          {
+            "description": "Invalid JSON payload received. Unknown name \"systemInstruction\": Cannot find field."
+          }
+        ]
+      }
+    ]
+  }
+}
+
+[2026-07-03 12:09:07] HTTP Code: 503 | Curl Error:  | Response: {
+  "error": {
+    "code": 503,
+    "message": "This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.",
+    "status": "UNAVAILABLE"
+  }
+}
+
+[2026-07-03 12:10:04] HTTP Code: 200 | Curl Error:  | Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": " setara dengan sekitar 2,5 kg atau 3,5 liter beras).\n    2. **Kualitas Beras:** Nominal uang tersebut disesuaikan dengan harga beras dengan kualitas"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "MAX_TOKENS",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 423,
+    "candidatesTokenCount": 38,
+    "totalTokenCount": 1419,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 423
+      }
+    ],
+    "thoughtsTokenCount": 958,
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash",
+  "responseId": "d4pHaqngF4nIjuMP4e6nuQY"
+}
+
+[2026-07-03 12:10:51] HTTP Code: 200 | Curl Error:  | Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "*Assalamu’alaikum Warahmatullahi Wabarakatuh.*\n\nSemoga Allah Subhanahu wa Ta'ala senantiasa melimpahkan rahmat, keberkahan, dan kesehatan kepada Bapak/Ibu"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "MAX_TOKENS",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 423,
+    "candidatesTokenCount": 40,
+    "totalTokenCount": 1419,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 423
+      }
+    ],
+    "thoughtsTokenCount": 956,
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash",
+  "responseId": "popHaqj6Ot_VjuMP8MjEqAk"
+}
+
+[2026-07-03 12:12:08] HTTP Code: 200 | Curl Error:  | Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "Assalamu’alaikum Warahmatullahi Wabarakatuh. \n\nSemoga Allah SWT senantiasa melimpahkan rahmat, hidayah, serta keberkahan kepada Bapak/Ibu se"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "MAX_TOKENS",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 423,
+    "candidatesTokenCount": 39,
+    "totalTokenCount": 1419,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 423
+      }
+    ],
+    "thoughtsTokenCount": 957,
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash",
+  "responseId": "84pHaoi8GLeAg8UPppWC-Ao"
+}
+
+[2026-07-03 12:14:29] HTTP Code: 200 | Curl Error:  | Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "Assalamu’alaikum Warahmatullahi Wabarakatuh.\n\nSemoga Allah SWT senantiasa melimpahkan rahmat, hidayah, dan keberkahan kepada Bapak/Ibu sekeluarga. Terima kasih telah menghubungi layanan tanya jawab keagamaan Masjid Al-Furqon.\n\nMengenai hukum membayar zakat fitrah dengan uang, berdasarkan keputusan resmi dari **Majelis Tarjih dan Tajdid Muhammadiyah**, hal tersebut **diperbolehkan**. \n\nBerikut adalah penjelasan lengkapnya untuk membantu pemahaman kita bersama:\n\n1. **Kadar yang Setara:** Zakat fitrah yang dibayarkan dalam bentuk uang harus senilai dengan harga makanan pokok (beras) seberat 1 sha' (yang setara dengan sekitar **2,5 kg atau 3,5 liter beras**).\n2. **Penyesuaian Harga:** Nominal uang yang dibayarkan disesuaikan dengan harga beras dengan kualitas yang biasa Bapak/Ibu konsumsi sehari-hari.\n3. **Kemaslahatan Penerima:** Penggunaan uang dinilai lebih praktis dan memberikan manfaat yang lebih fleksibel bagi penerima zakat (mustahik) untuk memenuhi berbagai kebutuhan pokok mereka yang mendesak, tidak terbatas hanya pada beras.\n\n*Pengingat: Jawaban ini bersifat referensi informasi berdasarkan putusan Tarjih Muhammadiyah. Untuk keputusan syariah yang mendalam dan sesuai dengan kondisi khusus Anda, kami sangat menganjurkan Bapak/Ibu untuk berkonsultasi langsung dengan ustaz atau ulama di Masjid Al-Furqon.*\n\nSemoga Allah SWT menerima amal ibadah zakat kita dan menjadikannya pembersih jiwa serta penyempurna ibadah kita. Amin ya Rabbal 'Alamin.\n\nWassalamu’alaikum Warahmatullahi Wabarakatuh.\n\n===\n**Sumber:** Fatwa Majelis Tarjih dan Tajdid PP Muhammadiyah"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 423,
+    "candidatesTokenCount": 389,
+    "totalTokenCount": 2080,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 423
+      }
+    ],
+    "thoughtsTokenCount": 1268,
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash",
+  "responseId": "fItHas-aK5XBjuMP-cKB4AQ"
+}
+
+[2026-07-03 12:15:36] HTTP Code: 200 | Curl Error:  | Response: {
+  "candidates": [
+    {
+      "content": {
+        "parts": [
+          {
+            "text": "Assalamu'alaikum Warahmatullahi Wabarakatuh.\n\nSemoga keselamatan, rahmat, dan keberkahan dari Allah SWT senantiasa menyertai Bapak/Ibu jamaah Masjid Al-Furqon yang dirahmati Allah.\n\nMengenai pertanyaan yang Anda ajukan tentang hukum membayar zakat fitrah dengan uang, berikut adalah penjelasan berdasarkan keputusan resmi dari Tarjih Muhammadiyah:\n\nMenurut fatwa **Majelis Tarjih dan Tajdid Muhammadiyah**, membayar zakat fitrah **diperbolehkan** menggunakan uang yang senilai dengan harga makanan pokok (beras) seberat 1 sha' (yang setara dengan sekitar **2,5 kg atau 3,5 liter beras**). \n\nKebijakan memperbolehkan zakat fitrah dengan uang ini didasarkan pada kemaslahatan, di mana penggunaan uang dinilai lebih praktis serta memberikan manfaat yang lebih fleksibel bagi penerima zakat (mustahik) untuk memenuhi kebutuhan pokok lainnya yang mungkin lebih mendesak. \n\nAdapun untuk nominal uang yang dibayarkan, silakan disesuaikan dengan harga beras kualitas yang biasa Bapak/Ibu konsumsi sehari-hari bersama keluarga.\n\n---\n\n*Pengingat: Jawaban ini bersifat referensi informasi yang bersumber dari putusan Tarjih Muhammadiyah. Untuk keputusan syariah yang mendalam dan konsultasi lebih lanjut mengenai kondisi khusus Anda, kami sangat menganjurkan untuk berkonsultasi secara langsung dengan ustaz atau ulama di Masjid Al-Furqon.*\n\nSemoga ibadah zakat kita diterima oleh Allah SWT dan menjadi pembersih jiwa serta penyempurna amalan kita. Aamiin ya Rabbal 'Alamin.\n\nWassalamu'alaikum Warahmatullahi Wabarakatuh.\n\n**Sumber: Fatwa Majelis Tarjih dan Tajdid PP Muhammadiyah**"
+          }
+        ],
+        "role": "model"
+      },
+      "finishReason": "STOP",
+      "index": 0
+    }
+  ],
+  "usageMetadata": {
+    "promptTokenCount": 423,
+    "candidatesTokenCount": 380,
+    "totalTokenCount": 1971,
+    "promptTokensDetails": [
+      {
+        "modality": "TEXT",
+        "tokenCount": 423
+      }
+    ],
+    "thoughtsTokenCount": 1168,
+    "serviceTier": "standard"
+  },
+  "modelVersion": "gemini-3.5-flash",
+  "responseId": "wItHao_rMKa7juMP1Y6_2AQ"
+}
+

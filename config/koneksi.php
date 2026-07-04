@@ -9,4 +9,7 @@ $conn = mysqli_connect($host, $user, $pass, $db);
 if (!$conn) {
     die("Koneksi database gagal: " . mysqli_connect_error());
 }
+
+// Include helper & utilitas secara otomatis
+require_once __DIR__ . '/helper.php';
 ?>
